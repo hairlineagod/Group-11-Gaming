@@ -11,6 +11,10 @@ using UnityEngine.SceneManagement;
 
 public class GameModeOptionSelect : MonoBehaviour
 {
+    /// <summary>
+    /// switches over the scene to whichever game mode the player wants to play
+    /// </summary>
+    /// <param name="sceneIndex"></param>
     public void SwitchScene(int sceneIndex)
     {
         SceneManager.LoadScene(sceneIndex);
