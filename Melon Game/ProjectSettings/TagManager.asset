@@ -15,6 +15,10 @@ TagManager:
   - Melon
   - Watermelon
   - Pineapple
+  - MaxRight
+  - MaxLeft
+  - ResetLeft
+  - ResetRight
   layers:
   - Default
   - TransparentFX
