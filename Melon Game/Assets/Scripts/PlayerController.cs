@@ -17,6 +17,15 @@ public class PlayerController : MonoBehaviour
     public bool maxRight = false;
     private int spawnTimer = 2;
     private GameObject tempFruit;
+    public float totalScore = 0f;
+    private float cherryPointValue = 5f;
+    private float strawberryPointValue = 10f;
+    private float applePointValue = 15f;
+    private float orangePointValue = 20f;
+    private float pearPointValue = 25f;
+    private float melonPointValue = 30f;
+    private float watermelonPointValue = 35f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,13 +40,13 @@ public class PlayerController : MonoBehaviour
         tempFruit.GetComponent<Rigidbody>().useGravity = false;
         tempFruit = Instantiate(tempFruit, nextSpawn.transform.position, new Quaternion(-90, 0, 0, -90));
         nextFruit.GetComponent<Rigidbody>().useGravity = true;
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
         //If a or left arrow key is held move buckets to the left
         if (Input.GetKey(KeyCode.A) && maxLeft == false || Input.GetKey(KeyCode.LeftArrow) && maxLeft == false)
         {
@@ -51,18 +60,51 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && dropped == false)
         {
             Debug.Log("Pressed Space");
-            
+
             StartCoroutine(SpawnFruit());
-            
+
         }
         if (spawned == true)
         {
             Debug.Log("spawning");
             Instantiate(fruits[whichFruit], spawnPos, new Quaternion(-90, 0, 0, -90));
             spawned = false;
-        
+
         }
 
+
+}
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Cherry")
+        {
+            totalScore += cherryPointValue;
+
+        }
+        if (other.gameObject.tag == "Strawberry")
+        {
+            totalScore += strawberryPointValue;
+        }
+        if (other.gameObject.tag == "Apple")
+        {
+            totalScore += applePointValue;
+        }
+        if (other.gameObject.tag == "Orange")
+        {
+            totalScore += orangePointValue;
+        }
+        if (other.gameObject.tag == "Pear")
+        {
+            totalScore += pearPointValue;
+        }
+        if (other.gameObject.tag == "Melon")
+        {
+            totalScore += melonPointValue;
+        }
+        if (other.gameObject.tag == "Watermelon")
+        {
+            totalScore += watermelonPointValue;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -97,7 +139,7 @@ public class PlayerController : MonoBehaviour
         firstFruit.GetComponent<Rigidbody>().useGravity = false;
         firstFruit.GetComponent<FruitsMerger>().enabled = false;
         firstFruit.transform.parent = transform;
-        
+
         tempFruit.SetActive(false);
         nextFruit.SetActive(true);
         nextFruit = fruits[Random.Range(0, 5)];
