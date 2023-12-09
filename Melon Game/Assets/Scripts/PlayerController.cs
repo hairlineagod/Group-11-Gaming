@@ -9,6 +9,15 @@ public class PlayerController : MonoBehaviour
     public int whichFruit;
     public bool spawned = false;
     public Vector3 spawnPos;
+    public float totalScore = 0f;
+    private float cherryPointValue = 5f;
+    private float strawberryPointValue = 10f;
+    private float applePointValue = 15f;
+    private float orangePointValue = 20f;
+    private float pearPointValue = 25f;
+    private float melonPointValue = 30f;
+    private float watermelonPointValue = 35f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +49,39 @@ public class PlayerController : MonoBehaviour
             Instantiate(fruits[whichFruit], spawnPos, new Quaternion(-90, 0, 0, -90));
             spawned = false;
         }
+        
 
+}
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Cherry")
+        {
+            totalScore += cherryPointValue;
+
+        }
+        if (other.gameObject.tag == "Strawberry")
+        {
+            totalScore += strawberryPointValue;
+        }
+        if (other.gameObject.tag == "Apple")
+        {
+            totalScore += applePointValue;
+        }
+        if (other.gameObject.tag == "Orange")
+        {
+            totalScore += orangePointValue;
+        }
+        if (other.gameObject.tag == "Pear")
+        {
+            totalScore += pearPointValue;
+        }
+        if (other.gameObject.tag == "Melon")
+        {
+            totalScore += melonPointValue;
+        }
+        if (other.gameObject.tag == "Watermelon")
+        {
+            totalScore += watermelonPointValue;
+        }
     }
 }
