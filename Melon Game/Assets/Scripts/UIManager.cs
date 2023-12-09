@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -18,5 +19,17 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         scoreText.text = "Score :" + player.totalScore;
+    }
+    public void RestartScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    public void MainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+    public void NextLevel()
+    {
+        SceneManager.LoadScene(3);
     }
 }

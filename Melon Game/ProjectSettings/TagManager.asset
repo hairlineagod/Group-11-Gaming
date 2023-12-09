@@ -19,6 +19,7 @@ TagManager:
   - MaxLeft
   - ResetLeft
   - ResetRight
+  - Out
   layers:
   - Default
   - TransparentFX

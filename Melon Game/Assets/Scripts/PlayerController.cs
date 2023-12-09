@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,22 +10,20 @@ public class PlayerController : MonoBehaviour
     private GameObject firstFruit;
     private GameObject nextFruit;
     public GameObject nextSpawn;
+    public GameObject loseBlock;
+    public GameObject winText;
     public int whichFruit;
     public bool spawned = false;
     public bool dropped = false;
+    public bool lost = false;
     public Vector3 spawnPos;
     public bool maxLeft = false;
     public bool maxRight = false;
     private int spawnTimer = 2;
     private GameObject tempFruit;
     public float totalScore = 0f;
-    private float cherryPointValue = 5f;
-    private float strawberryPointValue = 10f;
-    private float applePointValue = 15f;
-    private float orangePointValue = 20f;
-    private float pearPointValue = 25f;
-    private float melonPointValue = 30f;
-    private float watermelonPointValue = 35f;
+    private bool won = false;
+ 
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +32,7 @@ public class PlayerController : MonoBehaviour
         firstFruit = Instantiate(firstFruit, new Vector3(transform.position.x, transform.position.y - 1, transform.position.z), new Quaternion(-90, 0, 0, -90));
         firstFruit.GetComponent<Rigidbody>().useGravity = false;
         firstFruit.GetComponent<FruitsMerger>().enabled = false;
+        firstFruit.GetComponent<MeshCollider>().enabled = false;
         firstFruit.transform.parent = transform;
 
         nextFruit = fruits[Random.Range(0, 5)];
@@ -46,67 +46,52 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        //If a or left arrow key is held move buckets to the left
-        if (Input.GetKey(KeyCode.A) && maxLeft == false || Input.GetKey(KeyCode.LeftArrow) && maxLeft == false)
+        if (totalScore >= 1000 && SceneManager.GetActiveScene().buildIndex == 2)
         {
-            transform.position += Vector3.left * speed * Time.deltaTime;
+            winText.SetActive(true);
+            won = true;
         }
-        //If d or right arrow key is held move buckets to the right
-        if (Input.GetKey("d") && maxRight == false || Input.GetKey(KeyCode.RightArrow) && maxRight == false)
+        if (totalScore >= 1500 && SceneManager.GetActiveScene().buildIndex == 3)
         {
-            transform.position += Vector3.right * speed * Time.deltaTime;
+            winText.SetActive(true);
+            won = true;
         }
-        if (Input.GetKeyDown(KeyCode.Space) && dropped == false)
+        if (!won)
         {
-            Debug.Log("Pressed Space");
+            if (!lost)
+            {
+                //If a or left arrow key is held move buckets to the left
+                if (Input.GetKey(KeyCode.A) && maxLeft == false || Input.GetKey(KeyCode.LeftArrow) && maxLeft == false)
+                {
+                    transform.position += Vector3.left * speed * Time.deltaTime;
+                }
+                //If d or right arrow key is held move buckets to the right
+                if (Input.GetKey("d") && maxRight == false || Input.GetKey(KeyCode.RightArrow) && maxRight == false)
+                {
+                    transform.position += Vector3.right * speed * Time.deltaTime;
+                }
+                if (Input.GetKeyDown(KeyCode.Space) && dropped == false)
+                {
+                    Debug.Log("Pressed Space");
 
-            StartCoroutine(SpawnFruit());
+                    StartCoroutine(SpawnFruit());
 
+                }
+                if (spawned == true)
+                {
+                    Debug.Log("spawning");
+                    Instantiate(fruits[whichFruit], spawnPos, new Quaternion(-90, 0, 0, -90));
+                    spawned = false;
+
+                }
+            }
         }
-        if (spawned == true)
-        {
-            Debug.Log("spawning");
-            Instantiate(fruits[whichFruit], spawnPos, new Quaternion(-90, 0, 0, -90));
-            spawned = false;
-
-        }
+        
+        
+        
 
 
 }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Cherry")
-        {
-            totalScore += cherryPointValue;
-
-        }
-        if (other.gameObject.tag == "Strawberry")
-        {
-            totalScore += strawberryPointValue;
-        }
-        if (other.gameObject.tag == "Apple")
-        {
-            totalScore += applePointValue;
-        }
-        if (other.gameObject.tag == "Orange")
-        {
-            totalScore += orangePointValue;
-        }
-        if (other.gameObject.tag == "Pear")
-        {
-            totalScore += pearPointValue;
-        }
-        if (other.gameObject.tag == "Melon")
-        {
-            totalScore += melonPointValue;
-        }
-        if (other.gameObject.tag == "Watermelon")
-        {
-            totalScore += watermelonPointValue;
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "MaxLeft")
@@ -130,10 +115,12 @@ public class PlayerController : MonoBehaviour
     IEnumerator SpawnFruit()
     {
         dropped = true;
+        loseBlock.SetActive(false);
         firstFruit.transform.parent = null;
         firstFruit.GetComponent<Rigidbody>().useGravity = true;
         firstFruit.GetComponent<FruitsMerger>().enabled = true;
         yield return new WaitForSeconds(spawnTimer);
+        loseBlock.SetActive(true);
         firstFruit = nextFruit;
         firstFruit = Instantiate(firstFruit, new Vector3(transform.position.x, transform.position.y - 1, transform.position.z), new Quaternion(-90, 0, 0, -90));
         firstFruit.GetComponent<Rigidbody>().useGravity = false;
